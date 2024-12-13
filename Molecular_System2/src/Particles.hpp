@@ -5,7 +5,8 @@
 class Particles
 {
 public:
-    ofVec3f Size;
+    ofVec3f size_min;
+    ofVec3f size_max;
     ofVec2f Radius;
     ofVec2f Mass;
     ofVec2f LifeTime;
@@ -16,8 +17,8 @@ public:
     std::vector<Particle> particles;
 
 public:
-    Particles(size_t number, ofVec3f Size, ofVec2f Radius, ofVec2f Mass, ofVec2f LifeTime, ofVec3f maxVelocity, ofVec3f color_max, ofVec3f color_min)
-        : Size(Size), Radius(Radius), Mass(Mass), LifeTime(LifeTime), maxVelocity(maxVelocity), color_max(color_max), color_min(color_min)
+    Particles(size_t number, ofVec3f size_min, ofVec3f size_max, ofVec2f Radius, ofVec2f Mass, ofVec2f LifeTime, ofVec3f maxVelocity, ofVec3f color_max, ofVec3f color_min)
+        : size_min(size_min), size_max(size_max), Radius(Radius), Mass(Mass), LifeTime(LifeTime), maxVelocity(maxVelocity), color_max(color_max), color_min(color_min)
     {
         addParticle(number);
     }
@@ -26,7 +27,7 @@ public:
     {
         particles.push_back(
             Particle(
-                ofVec3f(ofRandom(0, Size.x), ofRandom(0, Size.y), ofRandom(0, Size.z)),
+                ofVec3f(ofRandom(size_min.x, size_max.x), ofRandom(size_min.y, size_max.y), ofRandom(size_min.z, size_max.z)),
                 ofVec3f(ofRandom(-maxVelocity.x, maxVelocity.x), ofRandom(-maxVelocity.y, maxVelocity.y), ofRandom(-maxVelocity.z, maxVelocity.z)),
                 ofColor(ofRandom(color_min.x, color_max.x), ofRandom(color_min.y, color_max.y), ofRandom(color_min.z, color_max.z)), ofRandom(Mass.x, Mass.y),
                 ofRandom(Radius.x, Radius.y), ofRandom(LifeTime.x, LifeTime.y))

@@ -51,18 +51,16 @@ void ofApp::handleCollision(Particle &p1, Particle &p2)
     // p2.position += normal * overlap;
 }
 
-ofApp::ofApp() : particles(1000,
-                           ofVec3f(ofGetWindowWidth() - 40, ofGetWindowHeight() - 40, -ofGetWindowHeight()), // pos
-                           ofVec2f(5, 20),                                                                   // radius
-                           ofVec2f(1, 10),                                                                   // mass
-                           ofVec2f(100, 200),                                                                // LifeTime
-                           ofVec3f(0, 0, 3),                                                                 // velocity
-                           ofVec3f(20, 20, 20),                                                              // maxcolors
-                           ofVec3f(20, 20, 20)                                                               // maxcolors
-                           ),
-
-                 sphere(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), ofColor(255, 0, 0), 250, 50, 100000)
-
+ofApp::ofApp() : snow(1000,
+                      ofVec3f(1000, 1000, 1000), // posmin
+                      ofVec3f(1000, 1000, 1000), // posmax
+                      ofVec2f(5, 20),                                                                   // radius
+                      ofVec2f(1, 10),                                                                   // mass
+                      ofVec2f(100, 200),                                                                // LifeTime
+                      ofVec3f(0, 0, 3),                                                                 // velocity
+                      ofVec3f(200, 200, 200),                                                           // maxcolors
+                      ofVec3f(250, 250, 250)                                                            // mincolors
+                 )
 {
 }
 //--------------------------------------------------------------
@@ -93,19 +91,20 @@ void ofApp::update()
     float time = ofGetElapsedTimef();
     pointLight.setPosition(300 * cos(time), 300, 300 * sin(time));
 
-    particles.update();
+    snow.update();
 
-    particles.useMethod([&](Particle &p)
-                        { 
-        wind.applyTo(p);
-        gravity.applyTo(p);
-        if(p.checkCollision(sphere)){
-            handleCollision(p,sphere);
-        }; });
+    snow.useMethod([&](Particle &p)
+                   {
+                       wind.applyTo(p);
+                       gravity.applyTo(p);
+                       // if(p.checkCollision(sphere)){
+                       //     handleCollision(p,sphere);
+                       // };
+                   });
 
-    if (particles.size() < 700)
+    if (snow.size() < 700)
     {
-        particles.addParticle(300);
+        snow.addParticle(300);
     }
 }
 
@@ -116,8 +115,7 @@ void ofApp::draw()
     pointLight.enable(); // Włącz źródło światła
     material.begin();    // Ustaw materiał
 
-    particles.draw(material);
-    sphere.draw(material);
+    snow.draw(material);
 
     material.end();       // Wyłącz materiał
     pointLight.disable(); // Wyłącz światło
@@ -142,27 +140,26 @@ void ofApp::mouseMoved(int x, int y)
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button)
 {
-    if (isDragging)
-    {
-        sphere.position = ofVec3f(x, y, 0) + dragOffset; // Aktualizacja pozycji sfery
-    }
+    // if (isDragging)
+    // {
+    //     sphere.position = ofVec3f(x, y, 0) + dragOffset; // Aktualizacja pozycji sfery
+    // }
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button)
 {
-    ofVec3f mousePosition(x, y, 0);
-    if (mousePosition.distance(sphere.position) <= sphere.radius)
-    {
-        isDragging = true;
-        dragOffset = sphere.position - mousePosition; // Ustawienie offsetu
-    }
+    // ofVec3f mousePosition(x, y, 0);
+    // if (mousePosition.distance(sphere.position) <= sphere.radius)
+    // {
+    //     isDragging = true;
+    //     dragOffset = sphere.position - mousePosition; // Ustawienie offsetu
+    // }
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button)
 {
-    isDragging = false; // Zatrzymanie przeciągania
 }
 
 //--------------------------------------------------------------
