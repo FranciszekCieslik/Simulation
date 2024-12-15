@@ -25,15 +25,19 @@ public:
 	void gotMessage(ofMessage msg);
 
 	Particles snow; // Cząsteczki
-	bool isDragging;	// Czy aktualnie przeciągamy sferę
+	Particles fire; // Cząsteczki
+
 	ofVec3f dragOffset; // Offset pomiędzy punktem kliknięcia a środkiem sfery
 
 	static Force wind;
 	static Force gravity;
+	static Force lift;
+	static Force spiral;
 
 	ofLight pointLight;	 // Punktowe źródło światła
 	ofMaterial material; // Materiał dla obiektów
-	void handleCollision(Particle &p1, Particle &p2);
 
 	ofEasyCam cam; // Kamera łatwa w obsłudze
+
+	ofShader glowShader;
 };

@@ -1,65 +1,64 @@
 #include "ofApp.hpp"
 
 Force ofApp::wind(
-    [](const Particle &p) -> ofVec3f
+    [](const Particle &p)
     {
-        return ofVec3f(0.3f, 0.0f, 0.0f); // Stała siła w osi X
+        return ofVec3f(ofRandom(-4, 4), ofRandom(0, 0), ofRandom(-4, 4)); // Siła eksplozji
     },
-    [](const Particle &p) -> bool
+    [](const Particle &p)
     {
-        return p.position.y > 0.0f; // Wiatr działa tylko nad płaszczyzną Y=0
+        return p.position.y > 0;
     });
 
 Force ofApp::gravity(
-    [](const Particle &p) -> ofVec3f
+    [](const Particle &p)
     {
-        ofVec3f center(0, 0, 0);
-        ofVec3f direction = center - p.position;
-        float distance = direction.length();
-        float strength = 9.8f / (distance * distance + 1.0f); // Prawo odwrotnego kwadratu
-        direction.getNormalized();
-        return direction * strength * 50;
+        return ofVec3f(0, -0.1, 0); // Grawitacja
     },
-    [](const Particle &p) -> bool
+    [](const Particle &p)
     {
-        return true;
+        return p.position.y > 0; // Działa tylko nad ziemią
     });
 
-void ofApp::handleCollision(Particle &p1, Particle &p2)
-{
-    ofVec3f delta = p2.position - p1.position;
-    float distance = delta.length();
+Force ofApp::lift(
+    [](const Particle &p)
+    {
+        return ofVec3f(0, ofRandom(0, 2), 0); // Siła unoszenia
+    },
+    [](const Particle &p)
+    {
+        return true; // Aktywne, gdy cząsteczka żyje
+    });
 
-    // Wektor normalny
-    ofVec3f normal = delta.getNormalized();
+Force ofApp::spiral(
+    [](const Particle &p)
+    {
+        return ofVec3f(sin(ofGetElapsedTimef()), 0, cos(ofGetElapsedTimef())) * 0.2f; // Spiralny ruch
+    },
+    [](const Particle &p)
+    {
+        return p.lifeTime > 0; // Aktywne, gdy cząsteczka żyje
+    });
 
-    // Prędkości normalne
-    ofVec3f v_n1 = normal * (p1.velocity.dot(normal));
-    ofVec3f v_n2 = normal * (p2.velocity.dot(normal));
-
-    // Prędkości styczne
-    ofVec3f v_t1 = p1.velocity - v_n1;
-    // ofVec3f v_t2 = p2.velocity - v_n2;
-
-    // Nowe prędkości
-    p1.velocity = v_t1 + v_n2;
-    // p2.velocity = v_t2 + v_n1;
-
-    // Korekta pozycji, aby uniknąć nakładania się kul
-    float overlap = 0.5f * (p1.radius + p2.radius - distance);
-    p1.position -= normal * overlap;
-    // p2.position += normal * overlap;
-}
-
-ofApp::ofApp() : snow(1000,
-                      ofVec3f(1000, 1000, 1000), // posmin
-                      ofVec3f(1000, 1000, 1000), // posmax
-                      ofVec2f(5, 20),                                                                   // radius
-                      ofVec2f(1, 10),                                                                   // mass
-                      ofVec2f(100, 200),                                                                // LifeTime
-                      ofVec3f(0, 0, 3),                                                                 // velocity
-                      ofVec3f(200, 200, 200),                                                           // maxcolors
-                      ofVec3f(250, 250, 250)                                                            // mincolors
+ofApp::ofApp() : snow(600,
+                      ofVec3f(0, 600, 0),     // posmin
+                      ofVec3f(200, 600, 200), // posmax
+                      ofVec2f(1, 3),          // radius
+                      ofVec2f(1, 1),          // mass
+                      ofVec2f(10, 30),        // LifeTime
+                      ofVec3f(0, 10, 0),      // velocity
+                      ofVec3f(250, 250, 250), // maxcolors
+                      ofVec3f(250, 250, 250)  // mincolors
+                      ),
+                 fire(200,
+                      ofVec3f(0, 20, 0),      // posmin
+                      ofVec3f(200, 20, 200),  // posmax
+                      ofVec2f(2, 2),          // radius
+                      ofVec2f(1, 1),          // mass
+                      ofVec2f(10, 20),        // LifeTime
+                      ofVec3f(1, 0, 1),       // velocity
+                      ofVec3f(250, 100, 100), // maxcolors
+                      ofVec3f(250, 100, 100)  // mincolors
                  )
 {
 }
@@ -81,7 +80,7 @@ void ofApp::setup()
     material.setSpecularColor(ofColor(255, 255, 255)); // Kolor refleksyjny obiektu
     material.setShininess(64);                         // Stopień połysku (im wyższa wartość, tym bardziej błyszczące)
 
-    isDragging = false;
+    glowShader.load("glow.vert", "glow.frag");
 }
 
 //--------------------------------------------------------------
@@ -92,20 +91,31 @@ void ofApp::update()
     pointLight.setPosition(300 * cos(time), 300, 300 * sin(time));
 
     snow.update();
+    fire.update();
 
     snow.useMethod([&](Particle &p)
                    {
                        wind.applyTo(p);
-                       gravity.applyTo(p);
-                       // if(p.checkCollision(sphere)){
-                       //     handleCollision(p,sphere);
-                       // };
-                   });
+                       gravity.applyTo(p); });
 
-    if (snow.size() < 700)
+    fire.useMethod([&](Particle &p)
+                   { 
+            lift.applyTo(p);
+            float time = ofGetElapsedTimef();
+            p.velocity.x += ofNoise(p.position.x * 0.1, time) * 0.5;
+            p.velocity.z += ofNoise(p.position.z * 0.1, time) * 0.5;
+            float lifeRatio = 1.0f - (p.lifeTime / 100.0f);
+            p.color = ofColor(255, 165 * lifeRatio, 0, 255 * lifeRatio);
+            p.radius *= 0.95; 
+            p.velocity= p.velocity.normalize() * ofRandom(2, 5); 
+            spiral.applyTo(p); });
+
+    if (ofGetElapsedTimeMillis() % 2000 < 100)
     {
-        snow.addParticle(300);
+        snow.addParticle(500);
+        fire.addParticle(500);
     }
+    fire.addParticle(150);
 }
 
 //--------------------------------------------------------------
@@ -116,6 +126,14 @@ void ofApp::draw()
     material.begin();    // Ustaw materiał
 
     snow.draw(material);
+
+    ofEnableBlendMode(OF_BLENDMODE_ADD); // Additive blending
+    glowShader.begin();
+    glowShader.setUniform3f("glowColor", 1.0, 0.5, 0.0); // Orange
+    glowShader.setUniform1f("glowIntensity", 2.0);
+    fire.draw(material);
+    glowShader.end();
+    ofDisableBlendMode();
 
     material.end();       // Wyłącz materiał
     pointLight.disable(); // Wyłącz światło
@@ -140,21 +158,11 @@ void ofApp::mouseMoved(int x, int y)
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button)
 {
-    // if (isDragging)
-    // {
-    //     sphere.position = ofVec3f(x, y, 0) + dragOffset; // Aktualizacja pozycji sfery
-    // }
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button)
 {
-    // ofVec3f mousePosition(x, y, 0);
-    // if (mousePosition.distance(sphere.position) <= sphere.radius)
-    // {
-    //     isDragging = true;
-    //     dragOffset = sphere.position - mousePosition; // Ustawienie offsetu
-    // }
 }
 
 //--------------------------------------------------------------
