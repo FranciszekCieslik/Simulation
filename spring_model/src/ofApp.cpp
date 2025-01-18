@@ -19,11 +19,24 @@ void ofApp::setup()
     previousPositions = positions;
     origin_positions = positions;
     velocities.resize(positions.size(), glm::vec3(0));
+
+    // Panel GUI
+    //  Inicjalizacja GUI
+    ofSetVerticalSync(true);
+    gui.setPosition(10, 10);                                            // Ustawienie pozycji GUI na ekranie
+    gui.setup("Parameters");                                            // Nazwa panelu
+    gui.add(springConstantgui.set("Spring Constant", 0.4f, 0.0f, 1.0f));   // Suwak dla stałej sprężystości
+    gui.add(dampingFactorgui.set("Damping Factor", 0.98f, 0.0f, 1.0f));    // Suwak dla tłumienia
+    gui.add(returnForceStrengthgui.set("Return Force", 0.2f, 0.0f, 1.0f)); // Suwak dla siły powrotu
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update()
 {
+    float time = ofGetElapsedTimef();
+    light.setPosition(300 * cos(time), 300, 300 * sin(time));
+
     updateVerticesVerlet();
 }
 
@@ -47,8 +60,11 @@ void ofApp::draw()
         ofDrawSphere(positions[selectedVertex], 0.05);
         ofSetColor(255);
     }
-
     cam.end();
+
+    ofDisableDepthTest(); // Wyłącz testowanie głębokości
+    gui.draw();           // Wyświetlenie panelu GUI
+    ofEnableDepthTest();  // Opcjonalnie: ponowne włączenie testowania głębokości
 }
 
 //--------------------------------------------------------------
@@ -106,12 +122,12 @@ void ofApp::generateSphere(float radius, int resolution)
 
 void ofApp::updateVerticesVerlet()
 {
-    float springConstant = 0.4f;      // Stała sprężystości
-    float dampingFactor = 0.98f;      // Współczynnik tłumienia
-    float deltaTime = 1.0f / 60.0f;   // Stały krok czasowy
-    float returnForceStrength = 0.2f; // Siła powrotu do pozycji początkowej
+    float springConstant = springConstantgui;           // Stała sprężystości
+    float dampingFactor = dampingFactorgui;             // Współczynnik tłumienia
+    float returnForceStrength = returnForceStrengthgui; // Siła powrotu do pozycji początkowej
+    float deltaTime = 1.0f / 60.0f;                  // Stały krok czasowy
 
-    for (int i = 0; i < positions.size(); i++)
+    for (int i = 0; i < int(positions.size()); i++)
     {
         glm::vec3 current = positions[i];
         glm::vec3 previous = previousPositions[i];
@@ -173,7 +189,7 @@ void ofApp::mousePressed(int x, int y, int button)
     float closestDepth = std::numeric_limits<float>::max();
     int closestIndex = -1;
 
-    for (int i = 0; i < positions.size(); i++)
+    for (int i = 0; i < int(positions.size()); i++)
     {
         // Rzutowanie wierzchołka na ekran
         glm::vec3 screenPos = cam.worldToScreen(positions[i]);

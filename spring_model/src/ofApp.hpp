@@ -1,5 +1,6 @@
 #pragma once
 #include "ofMain.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp
 {
@@ -28,4 +29,12 @@ private:
     std::unordered_map<int, std::vector<int>> neighbors;
 
     int selectedVertex = -1;
+
+    //----------------------------GUI--------------------------------
+    // GUI
+    ofxPanel gui;
+    ofParameter<float> springConstantgui;      // Przykładowa zmienna dla stałej sprężystości
+    ofParameter<float> dampingFactorgui;       // Przykładowa zmienna dla tłumienia
+    ofParameter<float> returnForceStrengthgui; // Przykładowa zmienna dla siły powrotu
+
 };

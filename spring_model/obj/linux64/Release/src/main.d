@@ -320,7 +320,19 @@ obj/linux64/Release/src/main.o: \
  /home/cieslik/openFrameworks/libs/openFrameworks/3d/of3dUtils.h \
  /home/cieslik/openFrameworks/libs/openFrameworks/3d/ofCamera.h \
  /home/cieslik/openFrameworks/libs/openFrameworks/3d/ofEasyCam.h \
- /home/cieslik/Desktop/Simulation/spring_model/src/ofApp.hpp
+ /home/cieslik/Desktop/Simulation/spring_model/src/ofApp.hpp \
+ /home/cieslik/openFrameworks/addons/ofxGui/src/ofxGui.h \
+ /home/cieslik/openFrameworks/addons/ofxGui/src/ofxToggle.h \
+ /home/cieslik/openFrameworks/addons/ofxGui/src/ofxBaseGui.h \
+ /home/cieslik/openFrameworks/addons/ofxGui/src/ofxSlider.h \
+ /home/cieslik/openFrameworks/addons/ofxGui/src/ofxInputField.h \
+ /home/cieslik/openFrameworks/addons/ofxGui/src/ofxGuiUtils.h \
+ /home/cieslik/openFrameworks/addons/ofxGui/src/ofxSliderGroup.h \
+ /home/cieslik/openFrameworks/addons/ofxGui/src/ofxGuiGroup.h \
+ /home/cieslik/openFrameworks/addons/ofxGui/src/ofxButton.h \
+ /home/cieslik/openFrameworks/addons/ofxGui/src/ofxLabel.h \
+ /home/cieslik/openFrameworks/addons/ofxGui/src/ofxColorPicker.h \
+ /home/cieslik/openFrameworks/addons/ofxGui/src/ofxPanel.h
 /home/cieslik/openFrameworks/libs/openFrameworks/ofMain.h:
 /home/cieslik/openFrameworks/libs/openFrameworks/utils/ofConstants.h:
 /home/cieslik/openFrameworks/libs/tess2/include/tesselator.h:
@@ -643,3 +655,15 @@ obj/linux64/Release/src/main.o: \
 /home/cieslik/openFrameworks/libs/openFrameworks/3d/ofCamera.h:
 /home/cieslik/openFrameworks/libs/openFrameworks/3d/ofEasyCam.h:
 /home/cieslik/Desktop/Simulation/spring_model/src/ofApp.hpp:
+/home/cieslik/openFrameworks/addons/ofxGui/src/ofxGui.h:
+/home/cieslik/openFrameworks/addons/ofxGui/src/ofxToggle.h:
+/home/cieslik/openFrameworks/addons/ofxGui/src/ofxBaseGui.h:
+/home/cieslik/openFrameworks/addons/ofxGui/src/ofxSlider.h:
+/home/cieslik/openFrameworks/addons/ofxGui/src/ofxInputField.h:
+/home/cieslik/openFrameworks/addons/ofxGui/src/ofxGuiUtils.h:
+/home/cieslik/openFrameworks/addons/ofxGui/src/ofxSliderGroup.h:
+/home/cieslik/openFrameworks/addons/ofxGui/src/ofxGuiGroup.h:
+/home/cieslik/openFrameworks/addons/ofxGui/src/ofxButton.h:
+/home/cieslik/openFrameworks/addons/ofxGui/src/ofxLabel.h:
+/home/cieslik/openFrameworks/addons/ofxGui/src/ofxColorPicker.h:
+/home/cieslik/openFrameworks/addons/ofxGui/src/ofxPanel.h:
