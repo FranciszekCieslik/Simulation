@@ -57,8 +57,8 @@ ofApp::ofApp() : particles(1000,
                            ofVec2f(1, 10),                                                                   // mass
                            ofVec2f(100, 200),                                                                // LifeTime
                            ofVec3f(0, 0, 3),                                                                 // velocity
-                           ofVec3f(20, 20, 20),                                                              // maxcolors
-                           ofVec3f(20, 20, 20)                                                               // maxcolors
+                           ofVec3f(70, 70, 70),                                                              // maxcolors
+                           ofVec3f(250, 250, 250)                                                               // maxcolors
                            ),
 
                  sphere(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), ofColor(255, 0, 0), 250, 50, 100000)
