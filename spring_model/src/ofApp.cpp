@@ -21,14 +21,12 @@ void ofApp::setup()
     velocities.resize(positions.size(), glm::vec3(0));
 
     // Panel GUI
-    //  Inicjalizacja GUI
     ofSetVerticalSync(true);
-    gui.setPosition(10, 10);                                            // Ustawienie pozycji GUI na ekranie
-    gui.setup("Parameters");                                            // Nazwa panelu
-    gui.add(springConstantgui.set("Spring Constant", 0.4f, 0.0f, 1.0f));   // Suwak dla stałej sprężystości
-    gui.add(dampingFactorgui.set("Damping Factor", 0.98f, 0.0f, 1.0f));    // Suwak dla tłumienia
-    gui.add(returnForceStrengthgui.set("Return Force", 0.2f, 0.0f, 1.0f)); // Suwak dla siły powrotu
-
+    gui.setPosition(10, 10);                                            
+    gui.setup("Parameters");                                            
+    gui.add(springConstantgui.set("Spring Constant", 0.4f, 0.0f, 1.0f));  
+    gui.add(dampingFactorgui.set("Damping Factor", 0.98f, 0.0f, 1.0f));    
+    gui.add(returnForceStrengthgui.set("Return Force", 0.2f, 0.0f, 1.0f)); 
 }
 
 //--------------------------------------------------------------
@@ -62,9 +60,9 @@ void ofApp::draw()
     }
     cam.end();
 
-    ofDisableDepthTest(); // Wyłącz testowanie głębokości
-    gui.draw();           // Wyświetlenie panelu GUI
-    ofEnableDepthTest();  // Opcjonalnie: ponowne włączenie testowania głębokości
+    ofDisableDepthTest(); 
+    gui.draw();           
+    ofEnableDepthTest();  
 }
 
 //--------------------------------------------------------------
@@ -122,10 +120,10 @@ void ofApp::generateSphere(float radius, int resolution)
 
 void ofApp::updateVerticesVerlet()
 {
-    float springConstant = springConstantgui;           // Stała sprężystości
-    float dampingFactor = dampingFactorgui;             // Współczynnik tłumienia
-    float returnForceStrength = returnForceStrengthgui; // Siła powrotu do pozycji początkowej
-    float deltaTime = 1.0f / 60.0f;                  // Stały krok czasowy
+    float springConstant = springConstantgui;           
+    float dampingFactor = dampingFactorgui;             
+    float returnForceStrength = returnForceStrengthgui;
+    float deltaTime = 1.0f / 60.0f;                 
 
     for (int i = 0; i < int(positions.size()); i++)
     {
@@ -212,7 +210,7 @@ void ofApp::mousePressed(int x, int y, int button)
 
     // Ustawienie wybranego wierzchołka, jeśli znaleziono
     if (closestIndex >= 0 && closestScreenDistance < 10.0f)
-    { // Próg odległości na ekranie
+    { 
         selectedVertex = closestIndex;
         cam.disableMouseInput();
     }

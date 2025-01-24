@@ -24,17 +24,16 @@ private:
     ofMesh mesh;
     std::vector<glm::vec3> origin_positions;
     std::vector<glm::vec3> positions;
-    std::vector<glm::vec3> previousPositions; // For Verlet integration
+    std::vector<glm::vec3> previousPositions;
     std::vector<glm::vec3> velocities;
     std::unordered_map<int, std::vector<int>> neighbors;
 
     int selectedVertex = -1;
 
     //----------------------------GUI--------------------------------
-    // GUI
+    
     ofxPanel gui;
     ofParameter<float> springConstantgui;      // Przykładowa zmienna dla stałej sprężystości
     ofParameter<float> dampingFactorgui;       // Przykładowa zmienna dla tłumienia
     ofParameter<float> returnForceStrengthgui; // Przykładowa zmienna dla siły powrotu
-
 };
